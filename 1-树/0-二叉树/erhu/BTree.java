@@ -27,8 +27,8 @@ public class BTree<T> {
         System.out.println("           /     /\\         ");
         System.out.println("          /     /  \\        ");
         System.out.println("      2_aa  2_ba    2_bb     ");
-        System.out.println("              /\\           ");
-        System.out.println("             /  \\          ");
+        System.out.println("              /\\            ");
+        System.out.println("             /  \\           ");
         System.out.println("        3_baa    3_bab       ");
         System.out.println();
 
