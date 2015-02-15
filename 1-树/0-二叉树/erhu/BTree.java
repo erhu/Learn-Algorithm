@@ -20,26 +20,37 @@ public class BTree<T> {
      * main
      */
     public static void main(String[] args) {
-
-        System.out.println("         Root              ");
-        System.out.println("         / \\              ");
-        System.out.println("        /   \\             ");
-        System.out.println("    1_left 1_right         ");
-        System.out.println("             / \\          ");
-        System.out.println("            /   \\         ");
-        System.out.println("       2_left  2_right\n\n");
-
+        System.out.println("             Root            ");
+        System.out.println("              /\\            ");
+        System.out.println("             /  \\           ");
+        System.out.println("          1_a    1_b         ");
+        System.out.println("           /     /\\         ");
+        System.out.println("          /     /  \\        ");
+        System.out.println("      2_aa  2_ba    2_bb     ");
+        System.out.println("              /\\           ");
+        System.out.println("             /  \\          ");
+        System.out.println("        3_baa    3_bab       ");
+        System.out.println();
 
         BTree<String> tree = new BTree<String>("Root");
         // left
-        tree.left = new BTree<String>("1_left");
+        {
+            tree.left = new BTree<String>("1_a");
+            tree.left.left = new BTree<String>("2_aa");
+        }
+
         // right
-        BTree<String> lvl1_right = new BTree<String>("1_right");
-        tree.right = lvl1_right;
+        {
+            tree.right = new BTree<String>("1_b");
+            tree.right.left = new BTree<String>("2_ba");
+            tree.right.right = new BTree<String>("2_bb");
+            {
+                tree.right.left.left = new BTree<String>("3_baa");
+                tree.right.left.right = new BTree<String>("3_bab");
+            }
+        }
 
-        lvl1_right.left = new BTree<String>("2_left");
-        lvl1_right.right = new BTree<String>("2_right");
-
+        // travel
         System.out.println("preOrder:");
         BTreeTraverse.preOrder(tree);
         System.out.println();
@@ -50,6 +61,10 @@ public class BTree<T> {
 
         System.out.println("postOrder:");
         BTreeTraverse.postOrder(tree);
+        System.out.println();
+
+        System.out.println("levelOrder:");
+        BTreeTraverse.levelOrder(tree);
         System.out.println();
     }
 
@@ -95,6 +110,24 @@ public class BTree<T> {
                 postOrder(t.right);
             }
             printNode(t);
+        }
+
+        /**
+         * level Order
+         */
+
+        public static void levelOrder(BTree t) {
+            if (t != null) {
+                if (t.left != null) {
+                    printNode(t.left);
+                }
+                if (t.right != null) {
+                    printNode(t.right);
+                }
+
+                levelOrder(t.left);
+                levelOrder(t.right);
+            }
         }
 
         private static void printNode(BTree t) {
