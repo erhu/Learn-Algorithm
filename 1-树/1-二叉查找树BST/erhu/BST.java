@@ -45,6 +45,14 @@ public class BST<T extends Comparable> {
         return null;
     }
 
+    /**
+     * 删除 BST 中的节点 v
+     *
+     * @param t   BST
+     * @param v   value
+     * @param <T> Generic Type
+     * @return 删除节点后的树
+     */
     static <T extends Comparable<T>> BST<T> delete(BST<T> t, T v) {
         if (t == null) {
             return null;
@@ -87,6 +95,20 @@ public class BST<T extends Comparable> {
             t.left = delete(t.left, v);
         }
         return t;
+    }
+
+    /**
+     * 中序遍历
+     *
+     * @param t   BST
+     * @param <T> Generic Type
+     */
+    public static <T extends Comparable<T>> void inOrder(BST<T> t, Op<T> op) {
+        if (t != null) {
+            inOrder(t.left, op);
+            op.execute(t.value);
+            inOrder(t.right, op);
+        }
     }
 
     public String toString() {

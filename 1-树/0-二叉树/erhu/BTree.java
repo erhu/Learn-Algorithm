@@ -34,37 +34,40 @@ public class BTree<T> {
 
         BTree<String> tree = new BTree<String>("Root");
         // left
-        {
-            tree.left = new BTree<String>("1_a");
-            tree.left.left = new BTree<String>("2_aa");
-        }
+        tree.left = new BTree<String>("1_a");
+        tree.left.left = new BTree<String>("2_aa");
 
         // right
+        tree.right = new BTree<String>("1_b");
+        tree.right.left = new BTree<String>("2_ba");
+        tree.right.right = new BTree<String>("2_bb");
         {
-            tree.right = new BTree<String>("1_b");
-            tree.right.left = new BTree<String>("2_ba");
-            tree.right.right = new BTree<String>("2_bb");
-            {
-                tree.right.left.left = new BTree<String>("3_baa");
-                tree.right.left.right = new BTree<String>("3_bab");
-            }
+            tree.right.left.left = new BTree<String>("3_baa");
+            tree.right.left.right = new BTree<String>("3_bab");
         }
 
         // travel
+        Op<String> op = new Op<String>() {
+            @Override
+            public void execute(String t) {
+                System.out.println(t);
+            }
+        };
+
         System.out.println("preOrder:");
-        BTreeTraverse.preOrder(tree);
+        BTreeTraverse.preOrder(tree, op);
         System.out.println();
 
         System.out.println("inOrder:");
-        BTreeTraverse.inOrder(tree);
+        BTreeTraverse.inOrder(tree, op);
         System.out.println();
 
         System.out.println("postOrder:");
-        BTreeTraverse.postOrder(tree);
+        BTreeTraverse.postOrder(tree, op);
         System.out.println();
 
         System.out.println("levelOrder:");
-        BTreeTraverse.levelOrder(tree);
+        BTreeTraverse.levelOrder(tree, op);
         System.out.println();
     }
 
@@ -76,62 +79,63 @@ public class BTree<T> {
         /**
          * preOrder
          */
-        public static void preOrder(BTree t) {
-            printNode(t);
+        public static <T> void preOrder(BTree<T> t, Op<T> op) {
+            op.execute(t.value);
             if (t.left != null) {
-                preOrder(t.left);
+                preOrder(t.left, op);
             }
             if (t.right != null) {
-                preOrder(t.right);
+                preOrder(t.right, op);
             }
         }
 
         /**
          * inOrder
          */
-        public static void inOrder(BTree t) {
+        public static <T> void inOrder(BTree<T> t, Op<T> op) {
             if (t.left != null) {
-                inOrder(t.left);
+                inOrder(t.left, op);
             }
-            printNode(t);
+            op.execute(t.value);
             if (t.right != null) {
-                inOrder(t.right);
+                inOrder(t.right, op);
             }
         }
 
         /**
          * postOrder
          */
-        public static void postOrder(BTree t) {
+        public static <T> void postOrder(BTree<T> t, Op<T> op) {
             if (t.left != null) {
-                postOrder(t.left);
+                postOrder(t.left, op);
             }
             if (t.right != null) {
-                postOrder(t.right);
+                postOrder(t.right, op);
             }
-            printNode(t);
+            op.execute(t.value);
         }
 
         /**
          * level Order
          */
 
-        public static void levelOrder(BTree t) {
+        public static <T> void levelOrder(BTree<T> t, Op<T> op) {
             if (t != null) {
                 if (t.left != null) {
-                    printNode(t.left);
+                    op.execute(t.value);
                 }
                 if (t.right != null) {
-                    printNode(t.right);
+                    op.execute(t.value);
                 }
 
-                levelOrder(t.left);
-                levelOrder(t.right);
+                levelOrder(t.left, op);
+                levelOrder(t.right, op);
             }
         }
+    }
 
-        private static void printNode(BTree t) {
-            System.out.println(t.value.toString());
-        }
+    interface Op<T> {
+        void execute(T t);
     }
 }
+
