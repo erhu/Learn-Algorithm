@@ -34,6 +34,17 @@ public class BST<T extends Comparable> {
         }
     }
 
+    static <T extends Comparable<T>> BST<T> search(BST<T> t, T v) {
+        if (t.value.equals(v)) {
+            return t;
+        } else if (t.left != null && v.compareTo(t.value) <= 0) {
+            return search(t.left, v);
+        } else if (t.right != null && v.compareTo(t.value) >= 0) {
+            return search(t.right, v);
+        }
+        return null;
+    }
+
     public String toString() {
         StringBuilder buffer = new StringBuilder();
         buffer.append("(").append(value).append("");

@@ -10,5 +10,8 @@ public class BSTTest {
     public static void main(String[] args) {
         BST<Integer> bst = BST.create(4, 3, 6, 2, 11, 5, 7, 9, 0);
         System.out.println(bst);
+
+        System.out.println(BST.search(bst, 0));
+
     }
 }
