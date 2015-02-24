@@ -8,12 +8,13 @@
 public class BSTTest {
 
     public static void main(String[] args) {
-        BST<Integer> bst = BST.create(4, 3, 6, 2, 11, 5, 7, 9, 0);
+
+        BST<Integer> bst = new BST(4, 3, 6, 2, 11, 5, 7, 9, 0);
         System.out.println(bst);
 
-        System.out.println(BST.search(bst, 9));
-        System.out.println(BST.delete(bst, 44));
-        BST.inOrder(bst, new Op<Integer>() {
+        System.out.println(bst.search(9));
+        System.out.println(bst.delete(44));
+        bst.inOrder(new Op<Integer>() {
             @Override
             public void execute(Integer v) {
                 System.out.print(v + " ");

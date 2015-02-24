@@ -1,15 +1,37 @@
-public class BST<T extends Comparable> {
-    T value;
-    BST<T> left;
-    BST<T> right;
+public class BST<T extends Comparable<T>> {
 
-    BST(T v) {
-        value = v;
+    Node root;
+
+    public BST(T... arg) {
+        root = create(arg);
     }
 
-    static <T extends Comparable<T>> BST create(T... args) {
+    private class Node {
+        T value;
+        Node left;
+        Node right;
+
+        public Node(T v) {
+            this.value = v;
+        }
+
+        public String toString() {
+            StringBuilder buffer = new StringBuilder();
+            buffer.append("(").append(value).append("");
+            if (left != null) {
+                buffer.append(" L:").append(left.toString());
+            }
+            if (right != null) {
+                buffer.append(" R:").append(right.toString());
+            }
+            buffer.append(")");
+            return buffer.toString();
+        }
+    }
+
+    Node create(T... args) {
         if (args != null && args.length > 0) {
-            BST<T> root = new BST<T>(args[0]);
+            Node root = new Node(args[0]);
             for (int i = 1; i < args.length; i++) {
                 insert(root, args[i]);
             }
@@ -18,42 +40,49 @@ public class BST<T extends Comparable> {
         return null;
     }
 
-    static <T extends Comparable<T>> void insert(BST<T> t, T v) {
+    void insert(Node t, T v) {
         if (v.compareTo(t.value) < 0) {
             if (t.left == null) {
-                t.left = new BST<T>(v);
+                t.left = new Node(v);
             } else {
                 insert(t.left, v);
             }
         } else if (v.compareTo(t.value) > 0) {
             if (t.right == null) {
-                t.right = new BST<T>(v);
+                t.right = new Node(v);
             } else {
                 insert(t.right, v);
             }
         }
     }
 
-    static <T extends Comparable<T>> BST<T> search(BST<T> t, T v) {
-        if (t.value.equals(v)) {
-            return t;
-        } else if (t.left != null && v.compareTo(t.value) <= 0) {
-            return search(t.left, v);
-        } else if (t.right != null && v.compareTo(t.value) >= 0) {
-            return search(t.right, v);
+    public Node search(T v) {
+        return _search(root, v);
+    }
+
+    private Node _search(Node root, T v) {
+        if (root.value.equals(v)) {
+            return root;
+        } else if (root.left != null && v.compareTo(root.value) <= 0) {
+            return _search(root.left, v);
+        } else if (root.right != null && v.compareTo(root.value) >= 0) {
+            return _search(root.right, v);
         }
         return null;
     }
 
+
     /**
      * 删除 BST 中的节点 v
      *
-     * @param t   BST
-     * @param v   value
-     * @param <T> Generic Type
+     * @param v value
      * @return 删除节点后的树
      */
-    static <T extends Comparable<T>> BST<T> delete(BST<T> t, T v) {
+    public Node delete(T v) {
+        return _delete(root, v);
+    }
+
+    private Node _delete(Node t, T v) {
         if (t == null) {
             return null;
         }
@@ -67,9 +96,9 @@ public class BST<T extends Comparable> {
                 t = t.left;
             } else {
                 /* 右右均不为空，用右子树中最小的节点替换 */
-                BST<T> r_min_node = t.right;
+                Node r_min_node = t.right;
                 // 最小节点的父节点
-                BST<T> min_node_parent = null;
+                Node min_node_parent = null;
                 while (r_min_node.left != null) {
                     min_node_parent = r_min_node;
                     r_min_node = r_min_node.left;
@@ -89,39 +118,32 @@ public class BST<T extends Comparable> {
             }
         } else if (v.compareTo(t.value) > 0) {
             // 在右子树
-            t.right = delete(t.right, v);
+            t.right = _delete(t.right, v);
         } else {
             // 在左子树
-            t.left = delete(t.left, v);
+            t.left = _delete(t.left, v);
         }
         return t;
     }
 
     /**
      * 中序遍历
-     *
-     * @param t   BST
-     * @param <T> Generic Type
      */
-    public static <T extends Comparable<T>> void inOrder(BST<T> t, Op<T> op) {
+    public void inOrder(Op<T> op) {
+        _inOrder(root, op);
+    }
+
+    private void _inOrder(Node t, Op<T> op) {
         if (t != null) {
-            inOrder(t.left, op);
+            _inOrder(t.left, op);
             op.execute(t.value);
-            inOrder(t.right, op);
+            _inOrder(t.right, op);
         }
     }
 
+    @Override
     public String toString() {
-        StringBuilder buffer = new StringBuilder();
-        buffer.append("(").append(value).append("");
-        if (left != null) {
-            buffer.append(" L:").append(left.toString());
-        }
-        if (right != null) {
-            buffer.append(" R:").append(right.toString());
-        }
-        buffer.append(")");
-        return buffer.toString();
+        return root.toString();
     }
 }
 
